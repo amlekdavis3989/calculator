@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        
+        .calculator {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .display {
+            background-color: #222;
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+            text-align: right;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            min-height: 40px;
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        
+        button {
+            padding: 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .number {
+            background-color: #e0e0e0;
+        }
+        
+        .operator {
+            background-color: #ff9500;
+            color: white;
+        }
+        
+        .clear {
+            background-color: #ff3b30;
+            color: white;
+        }
+        
+        .equals {
+            background-color: #4cd964;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        
+        <div class="buttons">
+            <!-- First Row -->
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="addToDisplay('/')">/</button>
+            <button class="operator" onclick="addToDisplay('*')">*</button>
+            <button class="operator" onclick="addToDisplay('-')">-</button>
+            
+            <!-- Second Row -->
+            <button class="number" onclick="addToDisplay('7')">7</button>
+            <button class="number" onclick="addToDisplay('8')">8</button>
+            <button class="number" onclick="addToDisplay('9')">9</button>
+            <button class="operator" onclick="addToDisplay('+')" style="grid-row: span 2;">+</button>
+            
+            <!-- Third Row -->
+            <button class="number" onclick="addToDisplay('4')">4</button>
+            <button class="number" onclick="addToDisplay('5')">5</button>
+            <button class="number" onclick="addToDisplay('6')">6</button>
+            
+            <!-- Fourth Row -->
+            <button class="number" onclick="addToDisplay('1')">1</button>
+            <button class="number" onclick="addToDisplay('2')">2</button>
+            <button class="number" onclick="addToDisplay('3')">3</button>
+            <button class="equals" onclick="calculate()" style="grid-row: span 2;">=</button>
+            
+            <!-- Fifth Row -->
+            <button class="number" onclick="addToDisplay('0')" style="grid-column: span 2;">0</button>
+            <button class="number" onclick="addToDisplay('.')">.</button>
+        </div>
+    </div>
+
+    <script>
+        // STEP 1: Basic math functions
+        function add(a, b) {
+            return a + b;
+        }
+        
+        function subtract(a, b) {
+            return a - b;
+        }
+        
+        function multiply(a, b) {
+            return a * b;
+        }
+        
+        function divide(a, b) {
+            return a / b;
+        }
+        
+        // STEP 2: Display functions
+        let displayValue = '0';
+        
+        function updateDisplay() {
+            document.getElementById('display').textContent = displayValue;
+        }
+        
+        function addToDisplay(value) {
+            if (displayValue === '0') {
+                displayValue = value;
+            } else {
+                displayValue += value;
+            }
+            updateDisplay();
+        }
+        
+        function clearDisplay() {
+            displayValue = '0';
+            updateDisplay();
+        }
+        
+        // STEP 3: Calculate function
+        function calculate() {
+            try {
+                // Replace × with * for calculation
+                let expression = displayValue.replace('×', '*');
+                
+                // Use JavaScript's eval() for simplicity (for beginners)
+                // Note: In real projects, avoid eval() for security reasons
+                let result = eval(expression);
+                
+                // Round long decimals
+                if (!Number.isInteger(result)) {
+                    result = Math.round(result * 100000) / 100000;
+                }
+                
+                displayValue = String(result);
+                updateDisplay();
+            } catch (error) {
+                displayValue = 'Error';
+                updateDisplay();
+            }
+        }
+        
+        // Initialize display
+        updateDisplay();
+        
+        // STEP 4: Add keyboard support (optional)
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            if (key >= '0' && key <= '9') {
+                addToDisplay(key);
+            } else if (key === '.' || key === '+' || key === '-' || key === '*' || key === '/') {
+                addToDisplay(key);
+            } else if (key === 'Enter' || key === '=') {
+                calculate();
+            } else if (key === 'Escape' || key === 'Delete') {
+                clearDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
